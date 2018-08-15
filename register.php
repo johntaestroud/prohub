@@ -18,6 +18,7 @@ $password2 = "";
 $date = "";
 $error_array = ""; #holds error msgs
 
+#$_POST - used to collect values from a form with method="post"
 if(isset($_POST['register_button'])){ #isset - determines if a var is set and is not a null
 
   #Registration form values
@@ -46,7 +47,25 @@ if(isset($_POST['register_button'])){ #isset - determines if a var is set and is
   $password2 = strip_tags($_POST['reg_password2']); #strip_tags - remove html tags. Store in $fname the val that was sent from the form
 
   $date = date("Y-m-d"); #current date
+
+  if($em == $em2) { #check for equality
+      #Check if email is in valid format
+      if(filter_var($em, FILTER_VALIDATE_EMAIL)) {
+        #check if em equals the validated version of the email
+        $em = filter_var($em, FILTER_VALIDATE_EMAIL);
+      }
+      else {
+        echo "Invalid format";
+      }
+
+    echo "Emails match";
+  }
+  else {
+      echo "Emails don't match";
+  }
+
 }
+
 ?>
 
 
@@ -59,7 +78,8 @@ if(isset($_POST['register_button'])){ #isset - determines if a var is set and is
   </head>
   <body>
 
-    <form action="register.php"> <!--send below info to register.php-->
+    <!--send below info to register.php-->
+    <form action="register.php" method="post"> <!---->
       <input type="text" name="reg_fname" placeholder="First Name" required>
       <br>
       <input type="text" name="reg_lname" placeholder="Last Name" required>
@@ -68,11 +88,11 @@ if(isset($_POST['register_button'])){ #isset - determines if a var is set and is
       <br>
       <input type="email" name="reg_email2" placeholder="Confirm Email" required>
       <br>
-      <input type="password" name="reg_password" placeholder="Email" required>
+      <input type="password" name="reg_password" placeholder="Password" required>
       <br>
       <input type="password" name="reg_password2" placeholder="Confirm Password" required>
       <br>
-      <input type="submit" name="reg_button" value="Register">
+      <input type="submit" name="register_button" value="Register">
 
     </form>
   </body>
