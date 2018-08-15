@@ -1,4 +1,6 @@
 <?php
+session_start(); #starts a session which allows the storage of variables
+
 $con = mysqli_connect("localhost", "root", "", "hub" ); #host, username, pw, db name
 
 if(mysqli_connect_errno()) #error warning
@@ -26,21 +28,25 @@ if(isset($_POST['register_button'])){ #isset - determines if a var is set and is
   $fname = strip_tags($_POST['reg_fname']); #strip_tags - remove html tags. Store in $fname the val that was sent from the form
   $fname = str_replace(' ', '', $fname); #str_replace -remove spaces. Take fname var and where there is a space replace it
   $fname = ucfirst(strtolower($fname)); # strtolower - converts all the letters to lowercase, ucfirst is going to capitalize the first letter
+  $_SESSION['reg_fname'] = $fname; # stores first name into session variable
 
   #last name
   $lname = strip_tags($_POST['reg_lname']); #strip_tags - remove html tags. Store in $fname the val that was sent from the form
   $lname = str_replace(' ', '', $lname); #str_replace -remove spaces. Take fname var and where there is a space replace it
   $lname = ucfirst(strtolower($lname)); # strtolower - converts all the letters to lowercase, ucfirst is going to capitalize the first letter
+  $_SESSION['reg_lname'] = $lname; # stores first name into session variable
 
   #email
   $em = strip_tags($_POST['reg_email']); #strip_tags - remove html tags. Store in $fname the val that was sent from the form
   $em = str_replace(' ', '', $em); #str_replace -remove spaces. Take fname var and where there is a space replace it
   $em = ucfirst(strtolower($em)); # strtolower - converts all the letters to lowercase, ucfirst is going to capitalize the first letter
+  $_SESSION['reg_email'] = $em; # stores first name into session variable
 
   #email 2
   $em2 = strip_tags($_POST['reg_email2']); #strip_tags - remove html tags. Store in $fname the val that was sent from the form
   $em2 = str_replace(' ', '', $em2); #str_replace -remove spaces. Take fname var and where there is a space replace it
   $em2 = ucfirst(strtolower($em2)); # strtolower - converts all the letters to lowercase, ucfirst is going to capitalize the first letter
+  $_SESSION['reg_email2'] = $em2; # stores first name into session variable
 
   #password
   $password = strip_tags($_POST['reg_password']); #strip_tags - remove html tags. Store in $fname the val that was sent from the form
@@ -81,12 +87,12 @@ if(isset($_POST['register_button'])){ #isset - determines if a var is set and is
         echo "Your passwords do not match";
       }
       else {
-        #preg_match - Performs a regular expression match
+        #preg_match - Performs a regular expression match, checking to see if val only contains characters and numbers
         if(preg_match('/[^A-Za-z0-9]/', $password)) {
-          echo "Your password can only contain characters or numbers"
+          echo "Your password can only contain characters or numbers";
         }
       }
-      
+      #strlen - Getting string length
       if(strlen($password > 30 || strlen($password) < 5)) {
         echo "Your password must be between 5 and 30 characters";
       }
@@ -112,13 +118,29 @@ if(isset($_POST['register_button'])){ #isset - determines if a var is set and is
 
     <!--send below info to register.php-->
     <form action="register.php" method="post"> <!---->
-      <input type="text" name="reg_fname" placeholder="First Name" required>
+      <input type="text" name="reg_fname" placeholder="First Name" value="<?php
+      if(isset($_SESSION['reg_fname'])) { #saving the input value
+        echo $_SESSION['reg_fname'];
+      }
+      ?>" required>
       <br>
-      <input type="text" name="reg_lname" placeholder="Last Name" required>
+      <input type="text" name="reg_lname" placeholder="Last Name" value="<?php
+      if(isset($_SESSION['reg_lname'])) { #saving the input value
+        echo $_SESSION['reg_lname'];
+      }
+      ?>" required>
       <br>
-      <input type="email" name="reg_email" placeholder="Email" required>
+      <input type="email" name="reg_email" placeholder="Email" value="<?php
+      if(isset($_SESSION['reg_email'])) { #saving the input value
+        echo $_SESSION['reg_email'];
+      }
+      ?>" required>
       <br>
-      <input type="email" name="reg_email2" placeholder="Confirm Email" required>
+      <input type="email" name="reg_email2" placeholder="Confirm Email" value="<?php
+      if(isset($_SESSION['reg_email2'])) { #saving the input value
+        echo $_SESSION['reg_email2'];
+      }
+      ?>" required>
       <br>
       <input type="password" name="reg_password" placeholder="Password" required>
       <br>
