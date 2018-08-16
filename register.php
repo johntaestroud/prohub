@@ -8,7 +8,7 @@ if(mysqli_connect_errno()) #error warning
   echo "Failed to connect: " . mysqli_connect_errno();
 }
 #using con insert the val 1 and Johntae
-$query = mysqli_query($con, "INSERT INTO test VALUES ('1', 'Johntae')");
+#$query = mysqli_query($con, "INSERT INTO test VALUES ('1', 'Johntae')");
 
 #Declaring variables to prevent errors
 $fname = "";
@@ -17,7 +17,7 @@ $em = "";
 $em2 = "";
 $password = "";
 $password2 = "";
-$date = "";
+$date = ""; #sign_up date
 $error_array = array(); #array() - Declaring into an empty array. Holds error msgs
 
 #$_POST - used to collect values from a form with method="post"
@@ -101,6 +101,43 @@ if(isset($_POST['register_button'])){ #isset - determines if a var is set and is
       #strlen - Getting string length
       if(strlen($password > 30 || strlen($password) < 5)) {
         array_push($error_array, "Your password must be between 5 and 30 characters<br>");
+      }
+
+      if(empty($error_array)) { #means no errors
+        $password = md5($password); #md5 - encrypts password to a long string
+
+        #Generate username by concatenating first name and last name
+        $username = strtolower($fname . "_" . $lname);
+        $check_username_query = mysqli_query($con, "SELECT username FROM users WHERE username='$username'");
+
+        #create a username, if found, add the val of i (username_1)
+        $i = 0;
+        #if username exists add number to username
+        while(mysqli_num_rows($check_username_query) != 0) {
+          $i++;
+          $username = $username . "_" . $i; #add the val of i (username_1)
+          $check_username_query = mysqli_query($con, "SELECT username FROM users WHERE username='$username'");
+        }
+
+        #Profile pic
+        $rand = rand(1, 2); #creating a random number between 1 and 2
+
+        if($rand == 1)
+          $profile_pic = "assets/images/profile_pics/defaults/head_amethyst.png";
+        else if($rand == 2)
+          $profile_pic = "assets/images/profile_pics/defaults/head_belize_hole.png";
+
+        #$query = mysqli_query($con, "INSERT INTO users VALUES (NULL, '$fname', '$lname', '$username', '$em', ''$password', '$date', '$profile_pic', '0', '0', 'no', ',')");
+        $query = mysqli_query($con, "INSERT INTO users VALUES (NULL, '$fname', '$lname', '$username', '$em', '$password', '$date', '$profile_pic', '0', '0', 'no', ',')");
+
+        array_push($error_array, "<span style='color: #14C800;'>You're all set! Goahead and login!</span><br>");
+
+    		//Clear session variables
+    		$_SESSION['reg_fname'] = "";
+    		$_SESSION['reg_lname'] = "";
+    		$_SESSION['reg_email'] = "";
+    		$_SESSION['reg_email2'] = "";
+
       }
 
 }
