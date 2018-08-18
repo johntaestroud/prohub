@@ -13,6 +13,14 @@ require 'includes/form_handlers/register_handler.php';
   </head>
   <body>
 
+    <form action="register.php" method="post">
+       <input type="email" name="log_email" placeholder="Email Address" >
+       <br>
+       <input type="password" name="log_password" placeholder="Password" >
+       <br>
+       <input type="submit" name="login_button" value="Login">
+    </form>
+
     <!--send below info to register.php-->
     <form action="register.php" method="post"> <!---->
       <input type="text" name="reg_fname" placeholder="First Name" value="<?php
